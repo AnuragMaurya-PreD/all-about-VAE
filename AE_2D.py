@@ -33,18 +33,22 @@ class AutoEncoder2D(nn.Module):
             nn.ConvTranspose2d(32, 1, stride=(1, 1), kernel_size=(3, 3), padding=1), 
             nn.GELU(), #1,28,28
         )
+        self.criterion=nn.MSELoss()
     
     def forward(self,x):
-        x=self.encoder(x)
+        out=self.encoder(x)
         # Output shape (BATCH_SIZE,1,5,5)
-        x=self.decoder(x)
-        return x
+        out=self.decoder(out)
+        return out
     
     def encode(self,x):
         return self.encoder(x).squeeze()
     
     def decode(self,x):
         return self.decoder(x)
+    
+    def calc_loss(self,x, reconstructed_x):
+        return self.criterion(x,reconstructed_x)
 
 # Sanity check 
 config=AutoEncoder2DConfig()

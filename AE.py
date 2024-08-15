@@ -43,14 +43,19 @@ class AutoEncoder(nn.Module):
                 Trim(),
                 nn.Sigmoid()
                 )
+        
+        self.criterion=nn.MSELoss()
 
     def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        return x
+        out = self.encoder(x)
+        out = self.decoder(out)
+        return out
     
     def encode(self,x):
         return self.encoder(x)
     
     def decode(self,x):
         return self.decoder(x)
+    
+    def calc_loss(self,x, reconstructed_x):
+        return self.criterion(x,reconstructed_x)
